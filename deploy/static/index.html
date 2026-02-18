@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game Devices Store</title>
+  <style>
+    body { font-family: Georgia, serif; margin: 0; background: linear-gradient(135deg,#f5f7fa,#e4ecf2); color:#1e2a35; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+    h1 { margin: 0 0 12px; }
+    .cards { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:18px; }
+    .card { background:#fff; border-radius:12px; padding:14px; box-shadow:0 8px 20px rgba(0,0,0,.08); }
+    img { width:100%; height:180px; object-fit:contain; background:#fff; }
+    a { color:#0b5cab; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Game Devices Store</h1>
+    <p>Стартовая страница (ЛР4): сюда подключается будущий SPA.</p>
+    <p><a href="/managment">/managment</a> | <a href="/api/v1">/api/v1 Swagger</a> | <a href="/documentation">/documentation</a></p>
+    <div class="cards">
+      <div class="card"><img src="/img/use_case.svg" alt="use-case"/><div>Use Case</div></div>
+      <div class="card"><img src="/img/er_diagram.svg" alt="er"/><div>ER Diagram</div></div>
+      <div class="card"><img src="/img/bpmnnew.svg" alt="bpmn"/><div>BPMN</div></div>
+    </div>
+  </div>
+</body>
+</html>

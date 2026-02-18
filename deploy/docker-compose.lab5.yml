@@ -1,0 +1,116 @@
+version: "3.9"
+
+services:
+  api-main:
+    build:
+      context: ..
+      dockerfile: Api/Dockerfile
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres
+      DB_PORT: 5432
+      APP_READ_ONLY: "false"
+    expose: ["8080"]
+
+  api-read1:
+    build:
+      context: ..
+      dockerfile: Api/Dockerfile
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres
+      DB_PORT: 5432
+      APP_READ_ONLY: "true"
+    expose: ["8080"]
+
+  api-read2:
+    build:
+      context: ..
+      dockerfile: Api/Dockerfile
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres
+      DB_PORT: 5432
+      APP_READ_ONLY: "true"
+    expose: ["8080"]
+
+  api-mirror-main:
+    build:
+      context: ..
+      dockerfile: Api/Dockerfile
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres
+      DB_PORT: 5432
+      APP_READ_ONLY: "false"
+    expose: ["8080"]
+
+  api-mirror-read1:
+    build:
+      context: ..
+      dockerfile: Api/Dockerfile
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres
+      DB_PORT: 5432
+      APP_READ_ONLY: "true"
+    expose: ["8080"]
+
+  api-mirror-read2:
+    build:
+      context: ..
+      dockerfile: Api/Dockerfile
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres
+      DB_PORT: 5432
+      APP_READ_ONLY: "true"
+    expose: ["8080"]
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - api-main
+      - api-read1
+      - api-read2
+      - api-mirror-main
+      - api-mirror-read1
+      - api-mirror-read2
+      - pgadmin
+      - grafana
+    ports:
+      - "8088:80"
+    volumes:
+      - ./nginx/lab5.conf:/etc/nginx/nginx.conf:ro
+      - ./static:/usr/share/nginx/html:ro
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    expose: ["80"]
+
+  loki:
+    image: grafana/loki:3.2.1
+    command: -config.file=/etc/loki/local-config.yaml
+    expose: ["3100"]
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    expose: ["3000"]

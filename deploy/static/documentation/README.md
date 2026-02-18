@@ -47,10 +47,3 @@ Regard|Веб приложение|Россия|Компьютерные дев�
 
 ![Checkin](./img/bpmnnew.svg)
 
-## 10. WebLabs #2-#5 artifacts
-
-- OpenAPI spec (LR2): `Api/openapi.yaml`
-- REST API implementation (LR3): `Api/`
-- Web server configs (LR4/LR5): `deploy/nginx/`
-- Docker compose scenarios (LR4/LR5): `deploy/docker-compose.lab4.yml`, `deploy/docker-compose.lab5.yml`
-- Reports: `deploy/reports/`

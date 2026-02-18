@@ -1,0 +1,395 @@
+openapi: 3.1.1
+info:
+  title: BMSTU Game Devices Store API
+  version: 1.0.0
+  description: REST API for external integrations and SPA/TUI clients.
+servers:
+  - url: /api/v1
+    description: API v1
+  - url: /api/v2
+    description: API v2
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/register:
+    post:
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users:
+    get:
+      tags: [Users]
+      responses:
+        '200':
+          description: Users list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Users]
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not found
+    put:
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags: [Users]
+      responses:
+        '204':
+          description: Deleted
+  /products:
+    get:
+      tags: [Products]
+      responses:
+        '200':
+          description: Products list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags: [Products]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+  /products/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Products]
+      responses:
+        '200':
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Not found
+    put:
+      tags: [Products]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    patch:
+      tags: [Products]
+      description: Partial update example
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchProductRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    delete:
+      tags: [Products]
+      responses:
+        '204':
+          description: Deleted
+  /orders:
+    get:
+      tags: [Orders]
+      responses:
+        '200':
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+    post:
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+  /orders/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Orders]
+      responses:
+        '200':
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+    delete:
+      tags: [Orders]
+      responses:
+        '204':
+          description: Deleted
+  /orders/by-user/{userId}:
+    parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Orders]
+      responses:
+        '200':
+          description: Orders by user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+  /orders/{id}/status:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+      responses:
+        '200':
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+    Role:
+      type: string
+      enum: [None, Admin, Seller, Client, Guest]
+    Status:
+      type: string
+      enum: [None, Init, Delivering, Delivered]
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        email: { type: string }
+        login: { type: string }
+        role:
+          $ref: '#/components/schemas/Role'
+      required: [id, name, phone, address, email, login, role]
+    CreateUserRequest:
+      type: object
+      properties:
+        name: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        email: { type: string }
+        login: { type: string }
+        password: { type: string }
+        role:
+          $ref: '#/components/schemas/Role'
+      required: [name, phone, address, email, login, password, role]
+    UpdateUserRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateUserRequest'
+    LoginRequest:
+      type: object
+      properties:
+        login: { type: string }
+        password: { type: string }
+      required: [login, password]
+    Product:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        price: { type: integer }
+        quantity: { type: integer }
+        manufacturer: { type: string }
+        description: { type: string }
+      required: [id, name, price, quantity, manufacturer, description]
+    CreateProductRequest:
+      type: object
+      properties:
+        name: { type: string }
+        price: { type: integer }
+        quantity: { type: integer }
+        manufacturer: { type: string }
+        description: { type: string }
+      required: [name, price, quantity, manufacturer, description]
+    UpdateProductRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateProductRequest'
+    PatchProductRequest:
+      type: object
+      properties:
+        name: { type: string }
+        price: { type: integer }
+        quantity: { type: integer }
+        manufacturer: { type: string }
+        description: { type: string }
+    Order:
+      type: object
+      properties:
+        id: { type: integer }
+        status:
+          $ref: '#/components/schemas/Status'
+        dataCreated:
+          type: string
+          format: date-time
+        userId: { type: integer }
+        promoId: { type: integer }
+      required: [id, status, dataCreated, userId, promoId]
+    CreateOrderRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        dataCreated:
+          type: string
+          format: date-time
+        userId: { type: integer }
+        promoId: { type: integer }
+      required: [status, dataCreated, userId, promoId]
+    UpdateOrderStatusRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+      required: [status]

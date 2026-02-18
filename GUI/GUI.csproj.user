@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="AppForm\FormAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormCarts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormItemCart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormItemOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormSelller.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewOrders.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewOrdersByClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewProducts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewProductsByClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewPromos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewPromosByClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewUserPromos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormViewUsers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormSignUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AppForm\FormInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
