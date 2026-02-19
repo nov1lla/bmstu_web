@@ -5,8 +5,15 @@
 - Конфиг: `deploy/nginx/lab5.conf`
 - GET/HEAD/OPTIONS -> upstream `api_read` с весами `2:1:1` (`api-main`, `api-read1`, `api-read2`)
 - POST/PUT/PATCH/DELETE -> upstream `api_write` (`api-main`)
-- Read-only инстансы: `APP_READ_ONLY=true`
+- Read-only инстансы: `APP_READ_ONLY=true` + пользователь БД `app_readonly`
+- Read реплика БД: `postgres-replica`
 - Mirror контур: `/mirror/*` -> `mirror_api_read` / `mirror_api_write`
+
+## Мониторинг (Loki + Grafana)
+
+- Loki: `http://localhost:8088/monitoring` (логин/пароль `admin/admin`)
+- Источник данных Loki уже преднастроен
+- Логи забирает `promtail` из docker-логов
 
 ## Команды запуска
 

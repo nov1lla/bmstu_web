@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using BL.RepositoryInterfaces;
 using BL.Services;
 using DA;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ var dbSettings = new DatabaseSettings
 };
 
 builder.Services.AddSingleton(dbSettings);
-builder.Services.ConfigureHttpJsonOptions(options =>
+builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
@@ -45,6 +46,19 @@ var app = builder.Build();
 
 app.UseMiddleware<ReadOnlyGuardMiddleware>();
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api/v2"))
+    {
+        context.Response.OnStarting(() =>
+        {
+            context.Response.Headers["X-Api-Version"] = "2";
+            return Task.CompletedTask;
+        });
+    }
+    await next();
+});
+
 app.MapGet("/status", () => Results.Ok(new
 {
     status = "ok",
@@ -62,8 +76,10 @@ app.MapAuthEndpoints("/api/v2");
 app.MapProductEndpoints("/api/v2");
 app.MapUserEndpoints("/api/v2");
 app.MapOrderEndpoints("/api/v2");
+app.MapGet("/api/v2/version", () => Results.Ok(new { version = "v2" }));
 
-var specPath = Path.Combine(app.Environment.ContentRootPath, "openapi.yaml");
+var specV1Path = Path.Combine(app.Environment.ContentRootPath, "openapi.v1.yaml");
+var specV2Path = Path.Combine(app.Environment.ContentRootPath, "openapi.v2.yaml");
 
 app.MapGet("/api/v1", () => Results.Content(
     SwaggerUiPage.Build("/api/v1/openapi.yaml", "BMSTU Web API v1"),
@@ -73,7 +89,7 @@ app.MapGet("/api/v2", () => Results.Content(
     SwaggerUiPage.Build("/api/v2/openapi.yaml", "BMSTU Web API v2"),
     "text/html"));
 
-app.MapGet("/api/v1/openapi.yaml", () => Results.File(specPath, "application/yaml"));
-app.MapGet("/api/v2/openapi.yaml", () => Results.File(specPath, "application/yaml"));
+app.MapGet("/api/v1/openapi.yaml", () => Results.File(specV1Path, "application/yaml"));
+app.MapGet("/api/v2/openapi.yaml", () => Results.File(specV2Path, "application/yaml"));
 
 app.Run();

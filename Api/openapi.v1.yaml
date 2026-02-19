@@ -287,17 +287,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-  /version:
-    get:
-      tags: [Meta]
-      description: API version (v2 only)
-      responses:
-        '200':
-          description: Version
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VersionInfo'
 components:
   schemas:
     Error:
@@ -404,9 +393,3 @@ components:
         status:
           $ref: '#/components/schemas/Status'
       required: [status]
-    VersionInfo:
-      type: object
-      properties:
-        version:
-          type: string
-      required: [version]

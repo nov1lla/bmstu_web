@@ -5,11 +5,15 @@ services:
     build:
       context: ..
       dockerfile: Api/Dockerfile
+    depends_on:
+      - postgres-master
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: host.docker.internal
-      DB_NAME: postgres
+      DB_PASSWORD: Qazedctgb13
+      DB_HOST: postgres-master
+      DB_NAME: db_ppo
       DB_PORT: 5432
       APP_READ_ONLY: "false"
     expose: ["8080"]
@@ -18,11 +22,15 @@ services:
     build:
       context: ..
       dockerfile: Api/Dockerfile
+    depends_on:
+      - postgres-replica
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: host.docker.internal
-      DB_NAME: postgres
+      DB_USER: app_readonly
+      DB_PASSWORD: readonly
+      DB_HOST: postgres-replica
+      DB_NAME: db_ppo
       DB_PORT: 5432
       APP_READ_ONLY: "true"
     expose: ["8080"]
@@ -31,11 +39,15 @@ services:
     build:
       context: ..
       dockerfile: Api/Dockerfile
+    depends_on:
+      - postgres-replica
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: host.docker.internal
-      DB_NAME: postgres
+      DB_USER: app_readonly
+      DB_PASSWORD: readonly
+      DB_HOST: postgres-replica
+      DB_NAME: db_ppo
       DB_PORT: 5432
       APP_READ_ONLY: "true"
     expose: ["8080"]
@@ -44,11 +56,15 @@ services:
     build:
       context: ..
       dockerfile: Api/Dockerfile
+    depends_on:
+      - postgres-master
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: host.docker.internal
-      DB_NAME: postgres
+      DB_PASSWORD: Qazedctgb13
+      DB_HOST: postgres-master
+      DB_NAME: db_ppo
       DB_PORT: 5432
       APP_READ_ONLY: "false"
     expose: ["8080"]
@@ -57,11 +73,15 @@ services:
     build:
       context: ..
       dockerfile: Api/Dockerfile
+    depends_on:
+      - postgres-replica
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: host.docker.internal
-      DB_NAME: postgres
+      DB_USER: app_readonly
+      DB_PASSWORD: readonly
+      DB_HOST: postgres-replica
+      DB_NAME: db_ppo
       DB_PORT: 5432
       APP_READ_ONLY: "true"
     expose: ["8080"]
@@ -70,14 +90,45 @@ services:
     build:
       context: ..
       dockerfile: Api/Dockerfile
+    depends_on:
+      - postgres-replica
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: host.docker.internal
-      DB_NAME: postgres
+      DB_USER: app_readonly
+      DB_PASSWORD: readonly
+      DB_HOST: postgres-replica
+      DB_NAME: db_ppo
       DB_PORT: 5432
       APP_READ_ONLY: "true"
     expose: ["8080"]
+
+  postgres-master:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Qazedctgb13
+      POSTGRES_DB: db_ppo
+    command: ["postgres", "-c", "wal_level=replica", "-c", "max_wal_senders=10", "-c", "max_replication_slots=10"]
+    volumes:
+      - pgdata-master:/var/lib/postgresql/data
+      - ./db/00-replication.sh:/docker-entrypoint-initdb.d/00-replication.sh:ro
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    expose: ["5432"]
+
+  postgres-replica:
+    image: postgres:16-alpine
+    depends_on:
+      - postgres-master
+    environment:
+      REPLICATION_USER: replicator
+      REPLICATION_PASSWORD: replpass
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - pgdata-replica:/var/lib/postgresql/data
+      - ./db/replica-entrypoint.sh:/replica-entrypoint.sh:ro
+    entrypoint: ["/replica-entrypoint.sh"]
+    expose: ["5432"]
 
   nginx:
     image: nginx:1.27-alpine
@@ -113,4 +164,20 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./monitoring/grafana:/etc/grafana/provisioning:ro
     expose: ["3000"]
+
+  promtail:
+    image: grafana/promtail:3.2.1
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log:ro
+    depends_on:
+      - loki
+
+volumes:
+  pgdata-master:
+  pgdata-replica:

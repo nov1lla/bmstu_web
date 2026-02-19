@@ -47,3 +47,13 @@ Regard|Веб приложение|Россия|Компьютерные дев�
 
 ![Checkin](./img/bpmnnew.svg)
 
+## 10. Черновые эскизы экранов
+
+Главная страница:
+![Wireframe Home](./img/wireframe-home.svg)
+
+Карточка товара:
+![Wireframe Product](./img/wireframe-product.svg)
+
+Корзина:
+![Wireframe Cart](./img/wireframe-cart.svg)

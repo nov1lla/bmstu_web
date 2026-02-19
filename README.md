@@ -47,6 +47,17 @@ Regard|Веб приложение|Россия|Компьютерные дев�
 
 ![Checkin](./img/bpmnnew.svg)
 
+## 10. Черновые эскизы экранов
+
+Главная страница:
+![Wireframe Home](./deploy/static/img/wireframe-home.svg)
+
+Карточка товара:
+![Wireframe Product](./deploy/static/img/wireframe-product.svg)
+
+Корзина:
+![Wireframe Cart](./deploy/static/img/wireframe-cart.svg)
+
 ## 10. WebLabs #2-#5 artifacts
 
 - OpenAPI spec (LR2): `Api/openapi.yaml`

@@ -11,7 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="openapi.yaml">
+    <Content Include="openapi.v1.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="openapi.v2.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
